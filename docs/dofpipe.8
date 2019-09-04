@@ -10,7 +10,7 @@ dofpipe \- Print LSM9DS1 data in JSON format.
 .B dofpipe
 Continuously prints out the LSM9DS1 converted accelerometer, magnetometer, and 
 gyroscope data, unless given the option \fB\-\-once\fR. Data is printed every 
-100 microseconds, or by the time given in \fB\-\-time\fR. Data is printed to 
+100 milliseconds, or by the time given in \fB\-\-time\fR. Data is printed to 
 stdout, or to the file given in \fB\-\-file\fR. This package utilizes liblsm9ds1 
 library and the LSM9DS1 settings can be configured in /usr/share/lsm9ds1.json. 
 .SH OPTIONS
@@ -22,4 +22,4 @@ Query the LSM9DS1 once. Default is to continuously query the LSM9DS1.
 Filename to output data to. By default the program will print to stdout.
 .TP
 .BR \-t ", " \-\-time =\fIQUERYTIME\fR 
-How often to query the LSM9DS1. Time is given in microseconds. Default is 100 microseconds.
+How often to query the LSM9DS1. Time is given in milliseconds. Default is 100 milliseconds.

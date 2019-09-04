@@ -8,6 +8,8 @@
 #include <unistd.h>
 #include <signal.h>
 #include <time.h>
+#include <math.h>
+#include <inttypes.h>
 
 #include "debug.h"
 
@@ -31,7 +33,7 @@ static char args_doc[] = "[FILENAME]...";
 static struct argp_option options[] = { 
     { "file", 'f', "FILENAME", 0, "Filename to output data to."},
     { "once", '1', 0, 0, "Query the LSM9DS1 once. Default is to continuously query the LSM9DS1."},
-    { "time", 't', "QUERYTIME", 0, "How often to query the LSM9DS1."},
+    { "time", 't', "QUERYTIME", 0, "How often to query the LSM9DS1. Given in milliseconds."},
     { 0 } 
 };
 
@@ -60,6 +62,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
             break;
         case 't':
             arguments->sleep_time = strtoul(arg, NULL, 0);
+            DEBUG_PRINT("Sleep for %d\n", arguments->sleep_time);
             if(arguments->sleep_time == ULONG_MAX) run = false;
             break;
         case ARGP_KEY_ARG: return 0;
@@ -90,6 +93,32 @@ void handle_signal(int signum) {
             // Do Nothing
             break;
     }
+}
+
+cJSON *json_create_time_str() {
+    long ms;
+    time_t s = {0};
+    struct timespec spec;
+
+    clock_gettime(CLOCK_REALTIME, &spec);
+
+    s = spec.tv_sec;
+    ms = round(spec.tv_nsec /1.0e6);
+    if(ms > 999) {
+        s++;
+        ms = 0;
+    }
+
+    char buf[128] = {0};
+    sprintf(buf, "%"PRIdMAX".%03ld", (intmax_t)s, ms);
+
+    cJSON *time = cJSON_CreateString(buf);
+
+    if(time == NULL) {
+        return NULL;
+    }
+
+    return time;
 }
 
 cJSON *json_create_sensor_str(struct sensor_data *data) {
@@ -131,7 +160,7 @@ int main(int argc, char *argv[]) {
     arguments.output = STDOUT;
     arguments.filename = NULL;
     arguments.run_once = false;
-    arguments.sleep_time = 100; // 100 microseconds.
+    arguments.sleep_time = 100; // 100 milliseconds.
 
     argp_parse(&argp, argc, argv, 0, 0, &arguments);
 
@@ -155,7 +184,7 @@ int main(int argc, char *argv[]) {
 	status = lsm9ds1_init();
 	if(status < 0) {
 		fprintf(stderr, "Error initializing lsm9ds1!\n");
-        exit(EXIT_FAILURE);
+        run = false;
 	}
 
     accelerometer_converted_data_t accel_data = {0};
@@ -165,15 +194,13 @@ int main(int argc, char *argv[]) {
     cJSON *accelerometer = NULL;
     cJSON *magnetometer = NULL;
     cJSON *gyroscope = NULL;
+    cJSON *time = NULL;
     char *string = NULL;
 
     struct timespec ts = {0};
 
     while(run)
     {
-        // string = NULL;
-        // dof = NULL;
-
     	status = get_accel(&accel_data);
         if(status < 0) {
             break;
@@ -212,24 +239,32 @@ int main(int argc, char *argv[]) {
         if(gyroscope == NULL) {
             break;
         }
+        time = json_create_time_str();
+        if(time == NULL) {
+            break;
+        }
+        cJSON_AddItemToObject(dof, "epoch", time);
         cJSON_AddItemToObject(dof, "accelerometer", accelerometer);
         cJSON_AddItemToObject(dof, "magnetometer", magnetometer);
         cJSON_AddItemToObject(dof, "gyroscope", gyroscope);
 
-        string = cJSON_Print(dof);
+        string = cJSON_PrintUnformatted(dof);
         if(string == NULL) {
             break;
         }
 
         fprintf(out, "%s\n", string);
         fflush(out);
+        cJSON_free(string);
+        cJSON_Delete(dof);
 
         if(arguments.run_once) {
             run = false;
         }
         else {
-            ts.tv_nsec = arguments.sleep_time * 1000;
-            nanosleep(&ts, NULL);
+            ts.tv_sec = arguments.sleep_time / 1000;
+            ts.tv_nsec = ((arguments.sleep_time % 1000) * 1000000);
+            nanosleep(&ts, &ts);
         }
     }
 
@@ -237,17 +272,7 @@ int main(int argc, char *argv[]) {
         fclose(out);
     }
 
-    if(dof != NULL) {
-        DEBUG_PRINT("Freeing cjson dof.\n");
-        cJSON_Delete(dof);
-    }
-
-    if(string != NULL) {
-        DEBUG_PRINT("Freeing cjson buffer.\n");
-        cJSON_free(string);
-    }
-
-    if(arguments.filename != NULL) {
+   if(arguments.filename != NULL) {
         DEBUG_PRINT("Freeing filename buffer.\n");
         free(arguments.filename);
     }
