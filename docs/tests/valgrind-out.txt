@@ -1,0 +1,102 @@
+valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=valgrind-out.txt dofpipe -1 -f test9.json -t 100
+==567== Memcheck, a memory error detector
+==567== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==567== Using Valgrind-3.14.0-353a3587bb-20181007X and LibVEX; rerun with -h for copyright info
+==567== Command: dofpipe -1 -f test9.json -t 100
+==567== Parent PID: 289
+==567== 
+--567-- 
+--567-- Valgrind options:
+--567--    --leak-check=full
+--567--    --show-leak-kinds=all
+--567--    --track-origins=yes
+--567--    --verbose
+--567--    --log-file=valgrind-out.txt
+--567-- Contents of /proc/version:
+--567--   Linux version 4.14.112 (oe-user@oe-host) (gcc version 8.2.0 (GCC)) #1 SMP Tue Aug 27 01:24:26 UTC 2019
+--567-- 
+--567-- Arch and hwcaps: ARM, LittleEndian, ARMv8-neon-vfp
+--567-- Page sizes: currently 4096, max supported 4096
+--567-- Valgrind library directory: /usr/lib/valgrind
+--567-- Reading syms from /bin/dofpipe
+--567-- Reading syms from /lib/ld-2.28.so
+--567--   Considering /lib/ld-2.28.so ..
+--567--   .. CRC mismatch (computed f69bcfca wanted 4d7d89f3)
+--567--   Considering /lib/.debug/ld-2.28.so ..
+--567--   .. CRC is valid
+--567-- Reading syms from /usr/lib/valgrind/memcheck-arm-linux
+--567--   Considering /usr/lib/valgrind/memcheck-arm-linux ..
+--567--   .. CRC mismatch (computed f125ed33 wanted 43edae5b)
+--567--    object doesn't have a symbol table
+--567--    object doesn't have a dynamic symbol table
+--567--   Reading EXIDX entries: 1 available
+--567--   Reading EXIDX entries: 0 attempted, 0 successful
+--567-- Scheduler: using generic scheduler lock implementation.
+--567-- Reading suppressions file: /usr/lib/valgrind/default.supp
+==567== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-567-by-root-on-???
+==567== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-567-by-root-on-???
+==567== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-567-by-root-on-???
+==567== 
+==567== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==567== don't want to do, unless you know exactly what you're doing,
+==567== or are doing some strange experiment):
+==567==   /usr/lib/valgrind/../../bin/vgdb --pid=567 ...command...
+==567== 
+==567== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==567==   /path/to/gdb dofpipe
+==567== and then give GDB the following command
+==567==   target remote | /usr/lib/valgrind/../../bin/vgdb --pid=567
+==567== --pid is optional if only one valgrind process is running
+==567== 
+--567-- REDIR: 0x4012441 (ld-linux-armhf.so.3:strlen) redirected to 0x580c82b4 (???)
+--567-- REDIR: 0x4012e80 (ld-linux-armhf.so.3:memcpy) redirected to 0x580c8318 (???)
+--567-- REDIR: 0x4011dd1 (ld-linux-armhf.so.3:strcmp) redirected to 0x580c8424 (???)
+--567-- REDIR: 0x4011d11 (ld-linux-armhf.so.3:index) redirected to 0x580c82e0 (???)
+--567-- Reading syms from /usr/lib/valgrind/vgpreload_core-arm-linux.so
+--567--   Considering /usr/lib/valgrind/vgpreload_core-arm-linux.so ..
+--567--   .. CRC mismatch (computed 28eff5f4 wanted 10688493)
+--567--    object doesn't have a symbol table
+--567-- Reading syms from /usr/lib/valgrind/vgpreload_memcheck-arm-linux.so
+--567-- Reading syms from /usr/lib/liblsm9ds1.so.0.1.0
+--567--   Considering /usr/lib/liblsm9ds1.so.0.1.0 ..
+--567--   .. CRC mismatch (computed 8808fe50 wanted 31770efb)
+--567--    object doesn't have a symbol table
+--567-- Reading syms from /usr/lib/libcjson.so.1.7.12
+--567--   Considering /usr/lib/libcjson.so.1.7.12 ..
+--567--   .. CRC mismatch (computed 5a6024d9 wanted 66e0166e)
+--567--    object doesn't have a symbol table
+--567-- Reading syms from /lib/libm-2.28.so
+--567--   Considering /lib/libm-2.28.so ..
+--567--   .. CRC mismatch (computed 12a8ec81 wanted de48b114)
+--567--   Considering /lib/.debug/libm-2.28.so ..
+--567--   .. CRC is valid
+--567-- Reading syms from /lib/libc-2.28.so
+--567--   Considering /lib/libc-2.28.so ..
+--567--   .. CRC mismatch (computed 8944314a wanted e388d2c5)
+--567--   Considering /lib/.debug/libc-2.28.so ..
+--567--   .. CRC is valid
+--567-- REDIR: 0x49527f1 (libc.so.6:rindex) redirected to 0x48422f8 (rindex)
+--567-- REDIR: 0x4954ae9 (libc.so.6:strchrnul) redirected to 0x48477e4 (strchrnul)
+--567-- REDIR: 0x4952541 (libc.so.6:strlen) redirected to 0x4842b08 (strlen)
+--567-- REDIR: 0x49538ed (libc.so.6:mempcpy) redirected to 0x4847910 (mempcpy)
+--567-- REDIR: 0x4953870 (libc.so.6:memset) redirected to 0x4846c34 (memset)
+--567-- REDIR: 0x4957c40 (libc.so.6:memcpy) redirected to 0x4844840 (memcpy)
+--567-- REDIR: 0x494f435 (libc.so.6:malloc) redirected to 0x483e8e4 (malloc)
+--567-- REDIR: 0x4951c91 (libc.so.6:strcmp) redirected to 0x4843d4c (strcmp)
+--567-- REDIR: 0x4951bd1 (libc.so.6:index) redirected to 0x4842548 (index)
+--567-- REDIR: 0x49527c1 (libc.so.6:strncpy) redirected to 0x4842f38 (strncpy)
+--567-- REDIR: 0x494f8f1 (libc.so.6:free) redirected to 0x483ff24 (free)
+--567-- REDIR: 0x4952f15 (libc.so.6:strstr) redirected to 0x4847f9c (strstr)
+--567-- REDIR: 0x49526e9 (libc.so.6:strncmp) redirected to 0x48434b8 (strncmp)
+--567-- REDIR: 0x499a9cd (libc.so.6:__memcpy_chk) redirected to 0x4847e74 (__memcpy_chk)
+--567-- REDIR: 0x4954a71 (libc.so.6:rawmemchr) redirected to 0x484781c (rawmemchr)
+--567-- REDIR: 0x494fab9 (libc.so.6:realloc) redirected to 0x4841758 (realloc)
+==567== 
+==567== HEAP SUMMARY:
+==567==     in use at exit: 0 bytes in 0 blocks
+==567==   total heap usage: 64 allocs, 64 frees, 11,816 bytes allocated
+==567== 
+==567== All heap blocks were freed -- no leaks are possible
+==567== 
+==567== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==567== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
