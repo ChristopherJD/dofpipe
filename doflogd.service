@@ -1,0 +1,16 @@
+[Unit]
+Description=LSM9DS1 Logging service
+StartLimitInterval=200
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=root
+ExecStart=dofpipe -t 100 -f /var/log/lsm9ds1.json
+ExecReload=kill -HUP $MAINPID
+Restart=always
+RestartSec=20
+
+[Install]
+WantedBy=multi-user.target
+

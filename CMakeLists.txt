@@ -27,8 +27,9 @@ SET(LICENSE "GPLV3")
 
 ########################### Documentation #####################################
 SET(MAN_PAGE "docs/dofpipe.8")
-###############################################################################
-
+########################### Systemd ###########################################
+# Directory with systemd unit files
+set (SYSTEMD_UNIT_DIR "lib/systemd/system/")
 ########################### Build and include settings ########################
 SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DDEBUG=1 -g")
 STRING(CONCAT CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -Wall -pedantic")
@@ -54,8 +55,12 @@ INSTALL(FILES ${MAN_PAGE}
     DESTINATION share/man/man8
 )
 
+INSTALL(DIRECTORY DESTINATION ${SYSTEMD_UNIT_DIR})
+INSTALL(FILES doflogd.service DESTINATION ${SYSTEMD_UNIT_DIR})
+
 ######################## RPM Package ##########################################
-#SET(DEPENDENCIES "liblsm9ds1 >= 0.6.0-alpha")
+SET(DEPENDENCIES "liblsm9ds1 >= 0.6.0-alpha")
+SET(DEPENDENCIES "libcjson1 >= 1.0-r0")
 SET(CPACK_RPM_PACKAGE_AUTOREQ OFF)
 SET(CPACK_RPM_PACKAGE_REQUIRES ${DEPENDENCIES})
 SET(CPACK_RPM_PACKAGE_RELOCATABLE ON)
