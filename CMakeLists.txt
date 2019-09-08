@@ -29,7 +29,7 @@ SET(LICENSE "GPLV3")
 SET(MAN_PAGE "docs/dofpipe.8")
 ########################### Systemd ###########################################
 # Directory with systemd unit files
-set (SYSTEMD_UNIT_DIR "lib/systemd/system/")
+set (SYSTEMD_UNIT_DIR "lib/systemd/user/")
 ########################### Build and include settings ########################
 SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DDEBUG=1 -g")
 STRING(CONCAT CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -Wall -pedantic")
