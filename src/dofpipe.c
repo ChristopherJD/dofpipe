@@ -201,17 +201,17 @@ int main(int argc, char *argv[]) {
 
     while(run)
     {
-    	status = get_accel(&accel_data);
+    	status = lsm9ds1_get_accel(&accel_data);
         if(status < 0) {
             break;
         }
 
-    	status = get_gyro(&gyro_data);
+    	status = lsm9ds1_get_gyro(&gyro_data);
         if(status < 0) {
             break;
         }
 
-    	status = get_mag(&mag_data);
+    	status = lsm9ds1_get_mag(&mag_data);
         if(status < 0) {
             break;
         }
